@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model Kullanici {
+  id              Int           @id @unique @default(autoincrement())
+  ad              String
+  soyad           String
+  kullaniciadi    String        @unique
+  sifre           String
+  yonetici        Boolean       @default(false)
+  sinavlar        Sinav[]
+}
+
+model Soru {
+  id              Int           @id @unique @default(autoincrement())
+  soru            String
+  a               String
+  b               String
+  c               String
+  d               String
+  dogruCevap      String
+  kategori        String
+  resim           String?
+}
+
+model Sinav {
+  id              Int           @id @unique @default(autoincrement())
+  tarih           DateTime      @default(now())
+  kullaniciId     Int
+  kullanici       Kullanici     @relation(fields: [kullaniciId], references: [id])
+  dogruCevaplar   Int           @default(0)
+  yanlisCevaplar  Int           @default(0)
+  bosCevaplar     Int           @default(0)
+  kategori        String
+}
